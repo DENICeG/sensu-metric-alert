@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +23,7 @@ func main() {
 	whiteflag.Alias("e", "endpoint", "endpoint to scrape (http://url:port/path)")
 	whiteflag.Alias("m", "metric", "the metric to watch")
 	whiteflag.Alias("s", "stripquotes", "remove quotes from metric fields")
+	whiteflag.Alias("p", "printall", "print all scraped metrics")
 	whiteflag.Alias("l", "lt", "value must be lower than this for crit status")
 	whiteflag.Alias("g", "gt", "value must be greater than this for crit status")
 	whiteflag.Alias("q", "eq", "value must be equal to this for crit status")
@@ -63,7 +65,11 @@ func main() {
 				os.Exit(2)
 			}
 
-			evaluate(val)
+			if !whiteflag.CheckBool("p") {
+				evaluate(val)
+			} else {
+				fmt.Println(respMetric, respVal)
+			}
 		}
 	}
 
