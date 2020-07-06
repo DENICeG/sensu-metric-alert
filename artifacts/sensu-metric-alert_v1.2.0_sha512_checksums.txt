@@ -1,1 +1,0 @@
-bc8ce7d2efa7a5a40edbec2464ad3821f051c9113ee71107e47bf67b1bc5a8284e7690288e2d53fa7ee1ba4feabf0b0b0ea9562c3206dd422e9a33f9fe5dad7a  sensu-metric-alert_v1.2.0_linux_amd64.tar.gz

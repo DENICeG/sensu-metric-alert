@@ -54,7 +54,11 @@ func main() {
 		respVal := line[1]
 
 		if whiteflag.CheckBool("s") {
-			respMetric = strings.ReplaceAll(respMetric, `"`, ` `)
+			respMetric = strings.ReplaceAll(respMetric, `"`, ``)
+		}
+
+		if whiteflag.CheckBool("p") {
+			fmt.Println(respMetric, respVal)
 		}
 
 		if strings.HasPrefix(respMetric, prmMetric) {
@@ -67,8 +71,6 @@ func main() {
 
 			if !whiteflag.CheckBool("p") {
 				evaluate(val)
-			} else {
-				fmt.Println(respMetric, respVal)
 			}
 		}
 	}
