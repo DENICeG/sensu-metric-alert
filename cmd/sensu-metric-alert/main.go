@@ -21,6 +21,7 @@ func main() {
 
 	whiteflag.Alias("e", "endpoint", "endpoint to scrape (http://url:port/path)")
 	whiteflag.Alias("m", "metric", "the metric to watch")
+	whiteflag.Alias("s", "stripquotes", "remove quotes from metric fields")
 	whiteflag.Alias("l", "lt", "value must be lower than this for crit status")
 	whiteflag.Alias("g", "gt", "value must be greater than this for crit status")
 	whiteflag.Alias("q", "eq", "value must be equal to this for crit status")
@@ -47,10 +48,16 @@ func main() {
 	s := bufio.NewScanner(resp.Body)
 	for s.Scan() {
 		line := strings.Split(s.Text(), " ")
+		respMetric := line[0]
+		respVal := line[1]
 
-		if strings.HasPrefix(line[0], prmMetric) {
+		if whiteflag.CheckBool("s") {
+			respMetric = strings.ReplaceAll(respMetric, `"`, ` `)
+		}
+
+		if strings.HasPrefix(respMetric, prmMetric) {
 			foundMetric = true
-			val, err := strconv.ParseFloat(line[1], 64)
+			val, err := strconv.ParseFloat(respVal, 64)
 			if err != nil {
 				log.Println(err)
 				os.Exit(2)
