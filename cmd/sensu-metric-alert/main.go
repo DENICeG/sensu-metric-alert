@@ -15,6 +15,7 @@ import (
 var (
 	prmEndpoint string
 	prmMetric   string
+	prmPrintAll bool
 )
 
 func main() {
@@ -22,12 +23,11 @@ func main() {
 
 	whiteflag.Alias("e", "endpoint", "endpoint to scrape (http://url:port/path)")
 	whiteflag.Alias("m", "metric", "the metric to watch")
-	whiteflag.Alias("s", "stripquotes", "remove quotes from metric fields")
-	whiteflag.Alias("p", "printall", "print all scraped metrics")
 	whiteflag.Alias("l", "lt", "value must be lower than this for crit status")
 	whiteflag.Alias("g", "gt", "value must be greater than this for crit status")
 	whiteflag.Alias("q", "eq", "value must be equal to this for crit status")
 	whiteflag.Alias("n", "ne", "value must be different from this for crit status")
+	whiteflag.Alias("p", "printall", "print all scraped metrics (without threshold evaluation)")
 	whiteflag.ParseCommandLine()
 
 	if !whiteflag.CheckString("e") || !whiteflag.CheckString("m") ||
@@ -38,6 +38,7 @@ func main() {
 
 	prmEndpoint = whiteflag.GetString("e")
 	prmMetric = whiteflag.GetString("m")
+	prmPrintAll = whiteflag.CheckBool("p")
 
 	resp, err := http.Get(prmEndpoint)
 	if err != nil {
@@ -46,36 +47,27 @@ func main() {
 	}
 	defer resp.Body.Close()
 
-	foundMetric := false
 	s := bufio.NewScanner(resp.Body)
 	for s.Scan() {
 		line := strings.Split(s.Text(), " ")
-		respMetric := line[0]
-		respVal := line[1]
 
-		if whiteflag.CheckBool("s") {
-			respMetric = strings.ReplaceAll(respMetric, `"`, ``)
-		}
+		scrapedMetric := line[0]
+		scrapedVal := line[1]
 
-		if whiteflag.CheckBool("p") {
-			fmt.Println(respMetric, respVal)
-		}
-
-		if strings.HasPrefix(respMetric, prmMetric) {
-			foundMetric = true
-			val, err := strconv.ParseFloat(respVal, 64)
+		if prmPrintAll {
+			fmt.Println(scrapedMetric, scrapedVal)
+		} else if strings.HasPrefix(scrapedMetric, prmMetric) {
+			val, err := strconv.ParseFloat(scrapedVal, 64)
 			if err != nil {
 				log.Println(err)
 				os.Exit(2)
 			}
 
-			if !whiteflag.CheckBool("p") {
-				evaluate(val)
-			}
+			evaluate(val)
 		}
 	}
 
-	if !foundMetric {
+	if !prmPrintAll {
 		log.Println("metric", prmMetric, "not found in endpoint output")
 		os.Exit(2)
 	}

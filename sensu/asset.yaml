@@ -3,5 +3,5 @@ api_version: core/v2
 metadata:
   name: sensu-metric-alert
 spec:
-  sha512: b060a277f076a1a368f8853e853cf44823de6fa6fb563ba6b3cb24173f1fcdb34af98018f9dce83db738dc174d9c242a249bbf017ca379a57bbadcc1dc6fd68d
-  url: https://github.com/DENICeG/sensu-metric-alert/releases/download/v1.2.1/sensu-metric-alert_v1.2.1_linux_amd64.tar.gz
+  sha512: b3a1bd991b40e3acba6c2df4625270cc7e7ec1a84a0d89639e2de3bb414c66037d6fa3c0fc645e8f18c6597b288da00e0f556bf7f9b3f92f1ecc1c40d631a0ba
+  url: https://github.com/DENICeG/sensu-metric-alert/releases/download/v1.3.0/sensu-metric-alert_v1.3.0_linux_amd64.tar.gz
