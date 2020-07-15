@@ -19,8 +19,6 @@ var (
 )
 
 func main() {
-	log.SetOutput(os.Stderr)
-
 	whiteflag.Alias("e", "endpoint", "endpoint to scrape (http://url:port/path)")
 	whiteflag.Alias("m", "metric", "the metric to watch")
 	whiteflag.Alias("l", "lt", "value must be lower than this for crit status")
@@ -77,20 +75,25 @@ func evaluate(val float64) {
 	log.Printf("%s = %f\n", prmMetric, val)
 
 	if whiteflag.CheckInt("lt") && val < float64(whiteflag.GetInt("lt")) {
+		log.Println("Value should be >", float64(whiteflag.GetInt("lt")))
 		os.Exit(2)
 	}
 
 	if whiteflag.CheckInt("gt") && val > float64(whiteflag.GetInt("gt")) {
+		log.Println("Value should be <", float64(whiteflag.GetInt("lt")))
 		os.Exit(2)
 	}
 
 	if whiteflag.CheckInt("eq") && val == float64(whiteflag.GetInt("eq")) {
+		log.Println("Value should be !=", float64(whiteflag.GetInt("lt")))
 		os.Exit(2)
 	}
 
 	if whiteflag.CheckInt("ne") && val != float64(whiteflag.GetInt("ne")) {
+		log.Println("Value should be =", float64(whiteflag.GetInt("lt")))
 		os.Exit(2)
 	}
 
+	log.Println("OK: Value in expected range")
 	os.Exit(0)
 }
