@@ -80,17 +80,17 @@ func evaluate(val float64) {
 	}
 
 	if whiteflag.CheckInt("gt") && val > float64(whiteflag.GetInt("gt")) {
-		log.Println("Value should be <", float64(whiteflag.GetInt("lt")))
+		log.Println("Value should be <", float64(whiteflag.GetInt("gt")))
 		os.Exit(2)
 	}
 
 	if whiteflag.CheckInt("eq") && val == float64(whiteflag.GetInt("eq")) {
-		log.Println("Value should be !=", float64(whiteflag.GetInt("lt")))
+		log.Println("Value should be !=", float64(whiteflag.GetInt("eq")))
 		os.Exit(2)
 	}
 
 	if whiteflag.CheckInt("ne") && val != float64(whiteflag.GetInt("ne")) {
-		log.Println("Value should be =", float64(whiteflag.GetInt("lt")))
+		log.Println("Value should be =", float64(whiteflag.GetInt("ne")))
 		os.Exit(2)
 	}
 
