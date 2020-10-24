@@ -75,12 +75,12 @@ func evaluate(val float64) {
 	log.Printf("%s = %f\n", prmMetric, val)
 
 	if whiteflag.CheckInt("lt") && val < float64(whiteflag.GetInt("lt")) {
-		log.Println("Value should be >", float64(whiteflag.GetInt("lt")))
+		log.Println("Value should be >=", float64(whiteflag.GetInt("lt")))
 		os.Exit(2)
 	}
 
 	if whiteflag.CheckInt("gt") && val > float64(whiteflag.GetInt("gt")) {
-		log.Println("Value should be <", float64(whiteflag.GetInt("gt")))
+		log.Println("Value should be <=", float64(whiteflag.GetInt("gt")))
 		os.Exit(2)
 	}
 
