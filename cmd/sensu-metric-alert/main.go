@@ -26,17 +26,16 @@ func main() {
 	whiteflag.Alias("q", "eq", "value must be equal to this for crit status")
 	whiteflag.Alias("n", "ne", "value must be different from this for crit status")
 	whiteflag.Alias("p", "printall", "print all scraped metrics (without threshold evaluation)")
-	whiteflag.ParseCommandLine()
 
-	if !whiteflag.CheckString("e") || !whiteflag.CheckString("m") ||
-		(!whiteflag.CheckInt("l")) && !whiteflag.CheckInt("g") && !whiteflag.CheckInt("q") && !whiteflag.CheckInt("n") {
+	if !whiteflag.FlagPresent("e") || !whiteflag.FlagPresent("m") ||
+		(!whiteflag.FlagPresent("l")) && !whiteflag.FlagPresent("g") && !whiteflag.FlagPresent("q") && !whiteflag.FlagPresent("n") {
 		println("usage: sensu-metric-alert -e <endpoint> -m <metric> --lt|--gt|--eq|--ne <crit value>")
 		os.Exit(2)
 	}
 
 	prmEndpoint = whiteflag.GetString("e")
 	prmMetric = whiteflag.GetString("m")
-	prmPrintAll = whiteflag.CheckBool("p")
+	prmPrintAll = whiteflag.FlagPresent("p")
 
 	resp, err := http.Get(prmEndpoint)
 	if err != nil {
@@ -74,22 +73,22 @@ func main() {
 func evaluate(val float64) {
 	log.Printf("%s = %f\n", prmMetric, val)
 
-	if whiteflag.CheckInt("lt") && val < float64(whiteflag.GetInt("lt")) {
+	if whiteflag.FlagPresent("lt") && val < float64(whiteflag.GetInt("lt")) {
 		log.Println("Value should be >=", float64(whiteflag.GetInt("lt")))
 		os.Exit(2)
 	}
 
-	if whiteflag.CheckInt("gt") && val > float64(whiteflag.GetInt("gt")) {
+	if whiteflag.FlagPresent("gt") && val > float64(whiteflag.GetInt("gt")) {
 		log.Println("Value should be <=", float64(whiteflag.GetInt("gt")))
 		os.Exit(2)
 	}
 
-	if whiteflag.CheckInt("eq") && val == float64(whiteflag.GetInt("eq")) {
+	if whiteflag.FlagPresent("eq") && val == float64(whiteflag.GetInt("eq")) {
 		log.Println("Value should be !=", float64(whiteflag.GetInt("eq")))
 		os.Exit(2)
 	}
 
-	if whiteflag.CheckInt("ne") && val != float64(whiteflag.GetInt("ne")) {
+	if whiteflag.FlagPresent("ne") && val != float64(whiteflag.GetInt("ne")) {
 		log.Println("Value should be =", float64(whiteflag.GetInt("ne")))
 		os.Exit(2)
 	}
